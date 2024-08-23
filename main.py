@@ -268,8 +268,8 @@ def display_records(stdscr, db_name):
         stdscr.border(0)
         stdscr.attroff(curses.color_pair(4))
 
-        stdscr.addstr(1, 2, "Santa's Naughty and Nice List", curses.A_BOLD | curses.A_UNDERLINE)
-        stdscr.addstr(2, 2, "-" * (w - 4))
+        stdscr.addstr(1, 1, "Santa's Naughty and Nice List", curses.A_BOLD | curses.A_UNDERLINE)
+        stdscr.addstr(2, 1, "-" * (w - 2))  # Adjust to remove the extra space on the right
 
         for idx in range(min(h - 5, len(filtered_records))):
             record_idx = start_row + idx
@@ -279,12 +279,12 @@ def display_records(stdscr, db_name):
             record_text = f"{record[0]:<3} | {truncate_text(record[1], 20):<20} | {str(record[2]):<3} | {truncate_text(record[4], 15):<15} | {record[6]:<7}"
             if record_idx == current_row:
                 stdscr.attron(curses.color_pair(1))
-                stdscr.addstr(idx + 3, 2, record_text)
+                stdscr.addstr(idx + 3, 1, record_text)  # Adjusted to 1 for cleaner left alignment
                 stdscr.attroff(curses.color_pair(1))
             else:
-                stdscr.addstr(idx + 3, 2, record_text)
+                stdscr.addstr(idx + 3, 1, record_text)  # Adjusted to 1 for cleaner left alignment
 
-        stdscr.addstr(h - 2, 2, "Use UP/DOWN to navigate | ENTER to view | 'a' to add | 'f' to search | 'q' to quit | ESC to go back",
+        stdscr.addstr(h - 2, 1, "Use UP/DOWN to navigate | ENTER to view | 'a' to add | 'f' to search | 'q' to quit | ESC to go back",
                       curses.color_pair(3))
         stdscr.refresh()
 
