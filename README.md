@@ -1,11 +1,6 @@
-We've all wondered how much Santa sees. Unfortunately, it looks Santa's security elves have been building a bit of a surveillance
-apparatus in his workshop. No big deal, as long as congress doesn't find out. How did you think he could see us when we're
-sleeping and know when we're awake? Magic? Nope. Python, Postgres, and Sqlite. I for one don't see a problem with some festive holiday
-invasion of privacy if it means getting nice presents, do you?
+Ho, ho, holy shit, we've been exposed!
 
-But before some whistleblower rats us out, let's use Santa's CRUD app to manage his naughty and nice list, and maybe edit ourselves into
-getting some presents before the big guy wakes up from his milk-and-cookies induced nap.
-
+An anonymous whistleblower named Elfward Snowden just leaked a traunche of emails where Santa exposed details of his workshop's internal systems. It turns out the big guy and his elves have been running a mass surveillance system for God knows how long, and they've been collecting a little more data than just if we're sleeping or awake.
 
 
     Scrollable List: Browse through a list of records in a scrollable interface.
