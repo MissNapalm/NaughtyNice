@@ -1,13 +1,12 @@
 Ho, ho, holy shit, we've been exposed!
 
-An anonymous whistleblower named Elfward Snowden just leaked a traunche of emails where Santa exposed details of his workshop's internal systems. It turns out the big guy and his elves have been running a mass surveillance system for God knows how long, and they've been collecting a little more data than just if we're sleeping or awake.
-
+An anonymous whistleblower named Elfward Snowden just leaked details of Santa's internal systems. It turns out the big guy and his security elves have been running a bit of a mass surveillance system at the North Pole for God knows how long, and they've been collecting a little more data than just if we're sleeping or awake. But it's all for a good cause. No one wants coal in their stocking...let's just hope congress doesn't find out.
 
     Scrollable List: Browse through a list of records in a scrollable interface.
     Detailed View: View detailed information for each record, including personal details and behavioral traits.
     Search Functionality: Search through records by name, location, reason, or status using a built-in search box.
-    Editing: Edit any record directly from the interface and save changes easily.
-    Add New Records: Add new entries to the list with all necessary details.
+    Editing: Edit any record directly from the interface and save changes easily. Change yourself from naughty to nice!
+    Add New Records: Add your enemies to the naughty list.
     Delete Records: Remove records from the list when needed.
     Navigation: Use intuitive keyboard shortcuts to navigate through the application.
 
