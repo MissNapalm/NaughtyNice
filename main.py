@@ -305,7 +305,8 @@ def display_records(stdscr, db_name):
             add_record(db_name, stdscr)
             records = fetch_records(db_name)
             filtered_records = records
-            current_row = len(filtered_records) - 1
+            current_row = len(filtered_records) - 1  # Set the highlight to the newly added record
+            start_row = max(0, len(filtered_records) - (h - 5))  # Ensure the view is scrolled to show the new record
         elif key == ord('f'):  # Search feature
             search_string = display_search_box(stdscr)
             filtered_records = search_records(db_name, search_string)
