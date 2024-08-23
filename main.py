@@ -20,6 +20,57 @@ def truncate_text(text, width):
     text = str(text)
     return text if len(text) <= width else text[:width - 3] + '...'
 
+def search_records(db_name, search_string):
+    """Search records in the database based on a search string."""
+    try:
+        conn = sqlite3.connect(db_name)
+        c = conn.cursor()
+        query = """
+        SELECT id, name, age, dob, location, reason, status, ip_phone, ip_pc, gps_data, last_searches, tooth_brushing, favorite_tv_show, socks_lost, social_media_hours, frequented_website, browser_info
+        FROM santa_list
+        WHERE name LIKE ? OR location LIKE ? OR reason LIKE ? OR status LIKE ?"""
+        search_term = f'%{search_string}%'
+        c.execute(query, (search_term, search_term, search_term, search_term))
+        rows = c.fetchall()
+        conn.close()
+        return rows
+    except Exception as e:
+        return []
+
+def display_search_box(stdscr):
+    """Display a search box in the middle of the screen."""
+    h, w = stdscr.getmaxyx()
+    search_win = curses.newwin(3, w // 2, h // 2 - 1, w // 4)
+    search_win.box()
+    curses.echo()
+    stdscr.refresh()
+
+    # Add label "Search:" outside the box
+    stdscr.addstr(h // 2 - 2, w // 4 - 8, "Search:")
+    search_win.refresh()
+
+    search_string = ''
+    while True:
+        char = search_win.getch(1, 1)
+        if char in [27, ord('q')]:  # Esc or q to cancel and return to main screen
+            search_string = ''
+            break
+        elif char in [10, 13]:  # Enter to confirm search
+            break
+        elif char in [8, 127]:  # Handle backspace
+            if search_string:
+                search_string = search_string[:-1]
+                search_win.addstr(1, 1, ' ' * (w // 2 - 2))  # Clear the input line
+                search_win.addstr(1, 1, search_string)
+        else:
+            search_string += chr(char)
+            search_win.addstr(1, 1, search_string)
+
+        search_win.refresh()
+
+    curses.noecho()
+    return search_string
+
 def display_record_details(stdscr, db_name, records, current_index):
     """Display detailed view of a single record."""
     curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)
@@ -78,9 +129,10 @@ def display_record_details(stdscr, db_name, records, current_index):
                 delete_record(db_name, records[current_index][0])
                 records = fetch_records(db_name)  # Refresh records after deletion
                 if len(records) == 0:
-                    return  # Exit if no records left
+                    break  # Exit if no records left
                 current_index = min(current_index, len(records) - 1)
-        elif key in [curses.KEY_ENTER, 10, 13, 27]:  # Enter or Esc key to go back
+        elif key in [curses.KEY_ENTER, 10, 13, 27]:  # Enter or Esc key to save and go back
+            update_record(db_name, records[current_index])
             break
 
 def edit_record(stdscr, db_name, record):
@@ -193,6 +245,7 @@ def display_records(stdscr, db_name):
     curses.init_pair(4, curses.COLOR_RED, curses.COLOR_BLACK)  # Border color
 
     records = fetch_records(db_name)
+    filtered_records = records
     if not records:
         stdscr.addstr(2, 2, "No records found. Press 'a' to add a new record or 'q' to quit.", curses.A_BOLD)
         stdscr.refresh()
@@ -201,6 +254,7 @@ def display_records(stdscr, db_name):
             if key == ord('a'):
                 add_record(db_name, stdscr)
                 records = fetch_records(db_name)
+                filtered_records = records
             elif key == ord('q'):
                 return
 
@@ -217,11 +271,11 @@ def display_records(stdscr, db_name):
         stdscr.addstr(1, 2, "Santa's Naughty and Nice List", curses.A_BOLD | curses.A_UNDERLINE)
         stdscr.addstr(2, 2, "-" * (w - 4))
 
-        for idx in range(min(h - 5, len(records))):
+        for idx in range(min(h - 5, len(filtered_records))):
             record_idx = start_row + idx
-            if record_idx >= len(records):
+            if record_idx >= len(filtered_records):
                 break  # Don't write beyond the screen
-            record = records[record_idx]
+            record = filtered_records[record_idx]
             record_text = f"{record[0]:<3} | {truncate_text(record[1], 20):<20} | {str(record[2]):<3} | {truncate_text(record[4], 15):<15} | {record[6]:<7}"
             if record_idx == current_row:
                 stdscr.attron(curses.color_pair(1))
@@ -230,7 +284,7 @@ def display_records(stdscr, db_name):
             else:
                 stdscr.addstr(idx + 3, 2, record_text)
 
-        stdscr.addstr(h - 2, 2, "Use UP/DOWN to navigate | ENTER to view | 'a' to add | 'q' to quit",
+        stdscr.addstr(h - 2, 2, "Use UP/DOWN to navigate | ENTER to view | 'a' to add | 'f' to search | 'q' to quit | ESC to go back",
                       curses.color_pair(3))
         stdscr.refresh()
 
@@ -240,18 +294,26 @@ def display_records(stdscr, db_name):
             current_row -= 1
             if current_row < start_row:
                 start_row -= 1
-        elif key == curses.KEY_DOWN and current_row < len(records) - 1:
+        elif key == curses.KEY_DOWN and current_row < len(filtered_records) - 1:
             current_row += 1
             if current_row >= start_row + (h - 5):
                 start_row += 1
         elif key in [curses.KEY_ENTER, 10, 13]:
-            display_record_details(stdscr, db_name, records, current_row)
-            records = fetch_records(db_name)  # Refresh records after viewing details
+            display_record_details(stdscr, db_name, filtered_records, current_row)
+            filtered_records = fetch_records(db_name)  # Refresh records after viewing details
         elif key == ord('a'):
             add_record(db_name, stdscr)
             records = fetch_records(db_name)
-            current_row = len(records) - 1
-        elif key == ord('q'):
+            filtered_records = records
+            current_row = len(filtered_records) - 1
+        elif key == ord('f'):  # Search feature
+            search_string = display_search_box(stdscr)
+            filtered_records = search_records(db_name, search_string)
+            current_row = 0  # Reset to the first result
+            start_row = 0  # Reset the visible window to the top
+        elif key == 27:  # 'Esc' to go back to the main screen without quitting
+            continue  # Go back to main screen without exiting
+        elif key == ord('q'):  # 'q' to quit
             break
 
 if __name__ == "__main__":
