@@ -1,6 +1,12 @@
-Santa's security elves have been building a bit of a surveillance apparatus in his workshop. No big deal, as long as the
-congress doesn't find out. But before some whistleblower rats us out, let's use Santa's CRUD app to manage his naughty and
-nice list, and maybe edit ourselves into getting some presents before he wakes up from his milk-and-cookies induced stupor.
+We've all wondered how much Santa sees. Unfortunately, it looks Santa's security elves have been building a bit of a surveillance
+apparatus in his workshop. No big deal, as long as congress doesn't find out. How did you think he could see us when we're
+sleeping and know when we're awake? Magic? Nope. Python, Postgres, and Sqlite. I for one don't see a problem with some festive holiday
+invasion of privacy if it means getting nice presents, do you?
+
+But before some whistleblower rats us out, let's use Santa's CRUD app to manage his naughty and nice list, and maybe edit ourselves into
+getting some presents before the big guy wakes up from his milk-and-cookies induced nap.
+
+
 
     Scrollable List: Browse through a list of records in a scrollable interface.
     Detailed View: View detailed information for each record, including personal details and behavioral traits.
